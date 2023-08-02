@@ -4,3 +4,6 @@ venv
 
 # Env
 .env
+
+# Install
+install

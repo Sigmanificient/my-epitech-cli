@@ -8,7 +8,15 @@
     utils.lib.eachDefaultSystem (system:
       with import nixpkgs { inherit system; }; {
         devShells.default = mkShell {
-          packages = [ python311 ];
+          packages = [
+            python311
+            nodejs
+            chromium
+          ];
+
+          shellHook = ''
+            echo "Browser path => ${chromium}"
+          '';
         };
       });
 }

@@ -17,7 +17,7 @@ assert AUTH.isascii()
 CURRENT_YEAR = datetime.now().year
 YEAR: Final[str] = _conf.get("YEAR") or str(CURRENT_YEAR - 1)
 
-URL: Final[str] = f"https://api.epitest.eu/me/{YEAR}/"
+URL: Final[str] = f"http://localhost:8080/epitest/me/{YEAR}/"
 
 
 def _format_cs_report(results):
