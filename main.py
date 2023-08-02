@@ -1,6 +1,9 @@
 from datetime import datetime
 from typing import Dict, Final, Optional, Tuple
 
+import time
+import sys
+
 import requests
 import dotenv
 
@@ -86,10 +89,22 @@ def pretty_print(data):
     print_skill_report(results)
 
 
+def ping_api(headers):
+    while True:
+        response = requests.get(URL, headers=headers)
+        print(f"{datetime.now().isoformat()}:", response.status_code)
+        
+        time.sleep(30)
+
+
 def main():
     _headers = { "Authorization": AUTH }
-    response = requests.get(URL, headers=_headers)
 
+    if len(sys.argv) == 2 and sys.argv[1] == "ping":
+        ping_api(_headers)
+        return;
+
+    response = requests.get(URL, headers=_headers)
     if not response.ok:
         print("Failed to request the url:", response.status_code)
         return
