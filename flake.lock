@@ -1,5 +1,22 @@
 {
   "nodes": {
+    "my-epitech-relay-git": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1642779761,
+        "narHash": "sha256-i/cNhXMcoi3an8NTTGTJ1yUCmnrD/1XYqJ8HpciQeWE=",
+        "owner": "norech",
+        "repo": "my-epitech-relay",
+        "rev": "c292fde6b2ba9390460de0b81537bca176d50a41",
+        "type": "github"
+      },
+      "original": {
+        "owner": "norech",
+        "ref": "master",
+        "repo": "my-epitech-relay",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1690927903,
@@ -17,6 +34,7 @@
     },
     "root": {
       "inputs": {
+        "my-epitech-relay-git": "my-epitech-relay-git",
         "nixpkgs": "nixpkgs"
       }
     }
