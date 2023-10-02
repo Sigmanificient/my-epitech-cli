@@ -1,9 +1,11 @@
 # Python
 venv
 *.pyc
+*.egg-info
 
 # Env
 .env
-
-# Install
 cookies.json
+
+# Nix
+result

@@ -62,6 +62,18 @@
           '';
         };
 
+        my-epitech-cli = let
+          pypkgs = pkgs.python311Packages;
+        in pypkgs.buildPythonPackage {
+          name = "my-epitech-cli";
+          version = "0.1.0";
+
+          src = ./.;
+          propagatedBuildInputs = with pypkgs; [
+            requests python-dotenv
+          ];
+        };
+
         default = my-epitech-relay;
       });
     };

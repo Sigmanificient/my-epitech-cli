@@ -2,22 +2,23 @@ from datetime import datetime
 from typing import Dict, Final, Optional, Tuple
 
 import time
+import os
 import sys
 
-import requests
 import dotenv
+import requests
 
-_conf = dotenv.dotenv_values()
+dotenv.load_dotenv(".env")
 
-AUTH: Optional[str] = _conf.get("AUTH")
+AUTH: Optional[str] = os.environ.get("AUTH")
 
 assert AUTH is not None
 assert AUTH.isascii()
 
 CURRENT_YEAR = datetime.now().year
-YEAR: Final[str] = _conf.get("YEAR") or str(CURRENT_YEAR - 1)
+YEAR: Final[str] = os.environ.get("YEAR") or str(CURRENT_YEAR - 1)
 
-URL: Final[str] = f"http://localhost:8080/epitest/me/{YEAR}/"
+URL: Final[str] = f"http://localhost:42001/epitest/me/{YEAR}/"
 
 
 def _format_cs_report(results):
