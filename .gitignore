@@ -6,4 +6,4 @@ venv
 .env
 
 # Install
-install
+cookies.json
