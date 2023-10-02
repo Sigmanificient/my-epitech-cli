@@ -3,6 +3,8 @@ from typing import Dict, Final, Optional, Tuple
 
 import time
 import os
+import signal
+import subprocess
 import sys
 
 import dotenv
@@ -82,7 +84,7 @@ def pretty_print(data):
 
     if results["mandatoryFailed"] == 1:
         print("Warning: Mandatory Failed Detected!")
- 
+
     print("Coding Style:", _format_cs_report(results))
     print(end="\n")
 
@@ -90,20 +92,20 @@ def pretty_print(data):
     print_skill_report(results)
 
 
-def ping_api(headers):
-    while True:
-        response = requests.get(URL, headers=headers)
-        print(f"{datetime.now().isoformat()}:", response.status_code)
-        
-        time.sleep(30)
+def wait_for_api(headers):
+    status = 0
+
+    while status != 200:
+        try:
+            response = requests.get(URL, headers=headers)
+            status = response.status_code
+        except requests.exceptions.ConnectionError:
+            time.sleep(2)
 
 
-def main():
+def run_cli():
     _headers = { "Authorization": AUTH }
-
-    if len(sys.argv) == 2 and sys.argv[1] == "ping":
-        ping_api(_headers)
-        return;
+    wait_for_api(_headers)
 
     response = requests.get(URL, headers=_headers)
     if not response.ok:
@@ -119,6 +121,23 @@ def main():
 
     last_entry = max(json, key=lambda d: d["date"])
     pretty_print(last_entry)
+    time.sleep(1)
+
+
+def main():
+    if "--no-relay" in sys.argv:
+        return run_cli()
+
+    process = subprocess.Popen(["my-epitech-relay"], shell=False)
+ 
+    run_cli()
+    print("Shutting down relay")
+    time.sleep(1)
+    try:
+        os.killpg(process.pid, signal.SIGINT)
+    except Exception as e:
+        print('got:', e)
+    print("end")
 
 
 if __name__ == "__main__":
