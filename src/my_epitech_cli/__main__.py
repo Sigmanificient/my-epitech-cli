@@ -3,9 +3,7 @@ from typing import Dict, Final, Optional, Tuple
 
 import time
 import os
-import signal
 import subprocess
-import sys
 
 import dotenv
 import requests
@@ -92,19 +90,27 @@ def pretty_print(data):
     print_skill_report(results)
 
 
+def ping_api(headers):
+    try:
+        response = requests.get(URL, headers=headers)
+        return response.ok
+    except (
+        requests.exceptions.ConnectTimeout,
+        requests.exceptions.ConnectionError
+    ):
+        return False
+
+
 def wait_for_api(headers):
-    status = 0
-
-    while status != 200:
-        try:
-            response = requests.get(URL, headers=headers)
-            status = response.status_code
-        except requests.exceptions.ConnectionError:
-            time.sleep(2)
+    while not ping_api(headers):
+        time.sleep(2)
 
 
-def run_cli():
+def main():
     _headers = { "Authorization": AUTH }
+    if not ping_api(_headers):
+        subprocess.Popen(["my-epitech-relay"], shell=True)
+
     wait_for_api(_headers)
 
     response = requests.get(URL, headers=_headers)
@@ -122,22 +128,6 @@ def run_cli():
     last_entry = max(json, key=lambda d: d["date"])
     pretty_print(last_entry)
     time.sleep(1)
-
-
-def main():
-    if "--no-relay" in sys.argv:
-        return run_cli()
-
-    process = subprocess.Popen(["my-epitech-relay"], shell=False)
- 
-    run_cli()
-    print("Shutting down relay")
-    time.sleep(1)
-    try:
-        os.killpg(process.pid, signal.SIGINT)
-    except Exception as e:
-        print('got:', e)
-    print("end")
 
 
 if __name__ == "__main__":
